@@ -1,0 +1,12 @@
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "name": "shield-org",
+  "namespace": "",
+  "sfdcLoginUrl": "https://storm-480268b59e3655.my.salesforce.com/",
+  "sourceApiVersion": "63.0"
+}
