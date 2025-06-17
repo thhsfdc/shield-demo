@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConnectedApp xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contactEmail>thoeger@salesforce.com</contactEmail>
+    <label>apidemo_connected</label>
+    <oauthConfig>
+        <callbackUrl>https://localhost/</callbackUrl>
+        <certificate>MIIDkjCCAnqgAwIBAgIUY5XKrswDesexkikwYHMBlzaZ5sUwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYTAkRFMQswCQYDVQQIDAJCWTEPMA0GA1UEBwwGTXVuaWNoMRcwFQYDVQQKDA5zYWxlc2ZvcmNlLmNvbTEYMBYGA1UECwwPMDBESHUwMDAwMFNKa3hIMSIwIAYDVQQDDBlhcGktY2Rvc2VjQHNhbGVzZm9yY2UuY29tMB4XDTI1MDYwMzE2MjIyNVoXDTI3MDYwMzE2MjIyNVowgYIxCzAJBgNVBAYTAkRFMQswCQYDVQQIDAJCWTEPMA0GA1UEBwwGTXVuaWNoMRcwFQYDVQQKDA5zYWxlc2ZvcmNlLmNvbTEYMBYGA1UECwwPMDBESHUwMDAwMFNKa3hIMSIwIAYDVQQDDBlhcGktY2Rvc2VjQHNhbGVzZm9yY2UuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtT9huzvPI+wYkHJ4bYoSo0SM30gDd7QeMYhv4RkD7O6rZR0xSxHOK8QDZK9jflBnv5u5ztDKuVmiqISQYx+FFX1Nwbsjf/B6paa8ktMUhpUGkdQPghci1FoNQa/cGf2ZTtpMogha3V0T46gUZ+4E6Q0rT+pKWPBa6/XTyOptacsBl4KXaGpNHA4mgXR946NqOZf6Gf1l1uL46CVXrGLDLofD1tEahcD9dpDfUgSxxZPKX8ISZgZ3IDoREoD1dueGmqKKodJytEo0rYTtEkmJplxFUMJRiuLNEDjUeNIi3icLJYi4MFt6AMJKQjrWVo5Q041tOqotCHgBKP4F0KASPwIDAQABMA0GCSqGSIb3DQEBCwUAA4IBAQBZc3f08F8JC3Qj1D12hqXKwrtrOpxXrfl3fBKsM733fyai2Bm1x3UzOASKMQ2VL8Joe38aE0b/D40pxU+qIx1l/2JxdUW1z2lN/O43w0lMXE3aLGTRH88zjzH40edorqeqsel3JrkNeGXFXKJ5ORy0ZmVXBowueTiyTvhuCjg8n4uIZpK6UyeoZF8ITyVynDt6P2dONRlE7Ba9nulgwt/X+iF3nVr0SAim8WXumjp5SKNvUdJGAsBSKJiDA7kXXBiYnm/OJv7wYqiANwBiWC1vxzUCDijPtWft22wL68IpF2Rv1omze74/Gon/iXpdW31nfRVHGAMfn68qZc+LLbeN</certificate>
+        <consumerKey>3MVG9VTfpJmxg1yiQhk_eNGTACUZMMPz6x5xq8LfII9hqjLYXijU8Ca5KhX5_q81TTKNzEuUioxjmbfVJHMMl</consumerKey>
+        <isAdminApproved>true</isAdminApproved>
+        <isClientCredentialEnabled>false</isClientCredentialEnabled>
+        <isCodeCredentialEnabled>false</isCodeCredentialEnabled>
+        <isCodeCredentialPostOnly>false</isCodeCredentialPostOnly>
+        <isConsumerSecretOptional>false</isConsumerSecretOptional>
+        <isIntrospectAllTokens>false</isIntrospectAllTokens>
+        <isNamedUserJwtEnabled>false</isNamedUserJwtEnabled>
+        <isPkceRequired>true</isPkceRequired>
+        <isRefreshTokenRotationEnabled>false</isRefreshTokenRotationEnabled>
+        <isSecretRequiredForRefreshToken>true</isSecretRequiredForRefreshToken>
+        <isSecretRequiredForTokenExchange>false</isSecretRequiredForTokenExchange>
+        <isTokenExchangeEnabled>false</isTokenExchangeEnabled>
+        <scopes>Full</scopes>
+        <scopes>RefreshToken</scopes>
+    </oauthConfig>
+    <oauthPolicy>
+        <ipRelaxation>BYPASS</ipRelaxation>
+        <isTokenExchangeFlowEnabled>false</isTokenExchangeFlowEnabled>
+        <refreshTokenPolicy>infinite</refreshTokenPolicy>
+    </oauthPolicy>
+    <permissionSetName>API access</permissionSetName>
+</ConnectedApp>
