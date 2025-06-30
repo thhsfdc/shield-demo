@@ -11,10 +11,10 @@
         </notifications>
         <twoFactorAuthentication>false</twoFactorAuthentication>
     </action>
-    <active>false</active>
+    <active>true</active>
     <developerName>TransactionpolicyInfo</developerName>
     <eventName>ApiEvent</eventName>
-    <flow>PolicyCondition_iGWRzYdEWCZeQZVFsxkc</flow>
+    <flow>PolicyCondition_WRHslEOEJjQBPInssRWB</flow>
     <masterLabel>Transaction policy Info</masterLabel>
     <type>CustomConditionBuilderPolicy</type>
 </TransactionSecurityPolicy>

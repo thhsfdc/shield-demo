@@ -12,8 +12,16 @@
         <readable>false</readable>
     </fieldPermissions>
     <layoutAssignments>
+        <layout>Contact-Contact Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
         <layout>DemoInfoObject__c-DemoInfoObject Layout</layout>
     </layoutAssignments>
+    <recordTypeVisibilities>
+        <default>false</default>
+        <recordType>Account.Individual</recordType>
+        <visible>true</visible>
+    </recordTypeVisibilities>
     <tabVisibilities>
         <tab>DemoInfoObject__c</tab>
         <visibility>Hidden</visibility>

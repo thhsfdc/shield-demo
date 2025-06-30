@@ -42,6 +42,7 @@ sf org list
 │    │ Sandbox │ shield-devsb      │ thoeger-cdosec@salesforce.com.dev    │ 00DD30000008sFeMAI │ Connected                                                            │
 └────┴─────────┴───────────────────┴──────────────────────────────────────┴────────────────────┴──────────────────────────────────────────────────────────────────────┘
 
+doc: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_source_tracking_pull_push_changes.htm
 
 sf project retrieve preview --target-org shield-devsb
 
@@ -83,3 +84,24 @@ Will Retrieve [28] files.
 created new branch dev001
 
 sf project retrieve start --target-org shield-devsb
+
+
+    Retrieving v63.0 metadata from thoeger-cdosec@salesforce.com.dev using the v64.0 SOAP API
+
+    ✔ Preparing retrieve request 10ms
+    ✔ Sending request to org 275ms
+    ✔ Waiting for the org to respond 18.86s
+    ✔ Done 0ms
+
+    Status: Succeeded
+    Elapsed Time: 19.15s
+
+running again:
+thoeger@thoeger-ltm8gf7:~/Documents/mulesoft/customer_topics/coop-uk/devops/vscode/shield-org$ sf project retrieve preview --target-org shield-devsb
+
+  No conflicts found.
+  No files will be deleted.
+  No files will be retrieved.
+  No files were ignored. Update your .forceignore file if you want to ignore certain files.
+
+sf project retrieve preview --target-org shield-devprosb
