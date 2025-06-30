@@ -4,6 +4,7 @@ global class OrgInfoAPIclass {
     @HttpGet
     global static Map<String, String> doGet() {
         Map<String, String> responseData = new Map<String, String>();
+        system.debug('I am in OrgInfoAPIclass');
 
         // 1. Get current timestamp with full date, time, and timezone
         Datetime currentDateTime = Datetime.now();
@@ -48,6 +49,7 @@ global class OrgInfoAPIclass {
             myDomainUrlString = 'Error: Could not retrieve My Domain URL via standard methods.';
         }
         responseData.put('myDomainUri', myDomainUrlString);
+		system.debug('I am in OrgInfoAPIclass - responseData'+responseData);
 
 
         // 4. Get the username of the executing user

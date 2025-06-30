@@ -32,6 +32,7 @@ logger.addHandler(ch)
 CONFIG_FILE_NAME = 'sforginfo.json'
 config_file_path = os.path.join(script_dir, CONFIG_FILE_NAME)
 API_ENDPOINT_PATH = '/services/apexrest/OrgInfoAPI'
+USERINFO_ENDPOINT_PATH = '/services/oauth2/userinfo' # New: UserInfo endpoint
 
 def load_config(file_path):
     """
@@ -72,14 +73,13 @@ def get_salesforce_access_token_client_credentials(config):
 
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     payload = {
-        'grant_type': 'client_credentials', # Key change for Client Credentials Flow
+        'grant_type': 'client_credentials',
         'client_id': config['SALESFORCE_CONSUMER_KEY'],
         'client_secret': config['SALESFORCE_CONSUMER_SECRET']
     }
-    # Create a debug-friendly version of the payload
     debug_payload = payload.copy()
     if 'client_secret' in debug_payload:
-        debug_payload['client_secret'] = '********' # Mask secret in logs
+        debug_payload['client_secret'] = '********'
     logger.debug(f"Authentication Request Headers: {headers}")
     logger.debug(f"Authentication Request Payload (masked): {debug_payload}")
 
@@ -87,19 +87,15 @@ def get_salesforce_access_token_client_credentials(config):
         logger.info("Attempting to get Salesforce access token using Client Credentials flow...")
         response = requests.post(token_url, headers=headers, data=payload)
 
-        # Log full response details
         logger.debug(f"Authentication Response Status Code: {response.status_code}")
         logger.debug(f"Authentication Response Headers: {response.headers}")
         logger.debug(f"Authentication Response Body: {response.text}")
 
-        response.raise_for_status() # Raise an exception for HTTP errors (4xx or 5xx)
+        response.raise_for_status()
         token_data = response.json()
         logger.info("Access token obtained successfully.")
         logger.debug(f"Received Token Data: {token_data}")
         
-        # The 'instance_url' in client credentials flow might be a bit different,
-        # often it's the login_url or the base URL. For OrgInfoAPI, we prefer My Domain.
-        # So we'll use the configured SALESFORCE_INSTANCE_URL from config.json.
         instance_url_from_response = token_data.get('instance_url', config['SALESFORCE_INSTANCE_URL'])
         
         return token_data['access_token'], instance_url_from_response
@@ -109,39 +105,74 @@ def get_salesforce_access_token_client_credentials(config):
             logger.error(f"Authentication Response Error (from server): {response.text}")
         return None, None
 
-# The call_org_info_api function remains exactly the same as it just needs the token and instance URL.
-def call_org_info_api(access_token, instance_url):
+def call_user_info_api(access_token, instance_url):
     """
-    Calls the Salesforce OrgInfoAPI endpoint using the obtained access token.
+    Calls the Salesforce UserInfo endpoint to get details about the authenticated user.
     """
     if not access_token or not instance_url:
-        logger.warning("Cannot call API: Missing access token or instance URL.")
-        return
+        logger.warning("Cannot call UserInfo API: Missing access token or instance URL.")
+        return None
 
-    api_url = f"{instance_url}{API_ENDPOINT_PATH}"
-    logger.debug(f"API Call URL: {api_url}")
+    userinfo_url = f"{instance_url}{USERINFO_ENDPOINT_PATH}"
+    logger.debug(f"UserInfo API Call URL: {userinfo_url}")
 
     headers = {
         'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json'
     }
-    logger.debug(f"API Call Request Headers: {headers}")
+    logger.debug(f"UserInfo API Call Request Headers: {headers}")
+
+    try:
+        logger.info(f"Calling UserInfo API: {userinfo_url}")
+        response = requests.get(userinfo_url, headers=headers)
+
+        logger.debug(f"UserInfo API Call Response Status Code: {response.status_code}")
+        logger.debug(f"UserInfo API Call Response Headers: {response.headers}")
+        logger.debug(f"UserInfo API Call Response Body: {response.text}")
+
+        response.raise_for_status()
+        user_info = response.json()
+        logger.info("UserInfo retrieved successfully.")
+        logger.debug(f"Received UserInfo Data: {user_info}")
+        return user_info
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error calling UserInfo API: {e}")
+        if response is not None:
+            logger.error(f"UserInfo API Call Response Error (from server): {response.text}")
+        return None
+
+
+def call_org_info_api(access_token, instance_url):
+    """
+    Calls the Salesforce OrgInfoAPI endpoint using the obtained access token.
+    """
+    if not access_token or not instance_url:
+        logger.warning("Cannot call OrgInfoAPI: Missing access token or instance URL.")
+        return
+
+    api_url = f"{instance_url}{API_ENDPOINT_PATH}"
+    logger.debug(f"OrgInfoAPI Call URL: {api_url}")
+
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json'
+    }
+    logger.debug(f"OrgInfoAPI Call Request Headers: {headers}")
 
     try:
         logger.info(f"Calling OrgInfoAPI: {api_url}")
         response = requests.get(api_url, headers=headers)
 
-        # Log full response details
-        logger.debug(f"API Call Response Status Code: {response.status_code}")
-        logger.debug(f"API Call Response Headers: {response.headers}")
-        logger.debug(f"API Call Response Body: {response.text}")
+        logger.debug(f"OrgInfoAPI Call Response Status Code: {response.status_code}")
+        logger.debug(f"OrgInfoAPI Call Response Headers: {response.headers}")
+        logger.debug(f"OrgInfoAPI Call Response Body: {response.text}")
 
-        response.raise_for_status() # Raise an exception for HTTP errors
+        response.raise_for_status()
         return response.json()
     except requests.exceptions.RequestException as e:
         logger.error(f"Error calling OrgInfoAPI: {e}")
         if response is not None:
-            logger.error(f"API Call Response Error (from server): {response.text}")
+            logger.error(f"OrgInfoAPI Call Response Error (from server): {response.text}")
         return None
 
 if __name__ == "__main__":
@@ -153,10 +184,20 @@ if __name__ == "__main__":
     if salesforce_config:
         # Get access token using Client Credentials flow
         access_token, instance_url = get_salesforce_access_token_client_credentials(salesforce_config)
-        logger.debug(f"Access Token (first 10 chars): {access_token[:10]}...")
-        logger.debug(f"Instance URL: {instance_url}")
-
+        
         if access_token and instance_url:
+            logger.debug(f"Access Token (first 10 chars): {access_token[:10]}...")
+            logger.debug(f"Instance URL: {instance_url}")
+
+            # --- NEW: Call UserInfo Endpoint ---
+            user_info = call_user_info_api(access_token, instance_url)
+            if user_info:
+                logger.info("\n--- User Information ---")
+                logger.info(json.dumps(user_info, indent=4))
+            else:
+                logger.warning("Failed to retrieve User Information from UserInfo endpoint.")
+            # --- END NEW ---
+
             # Call the Apex REST API
             org_info = call_org_info_api(access_token, instance_url)
 
@@ -166,7 +207,7 @@ if __name__ == "__main__":
             else:
                 logger.error("Failed to retrieve Org Information.")
         else:
-            logger.error("Authentication failed. Cannot proceed with API call.")
+            logger.error("Authentication failed. Cannot proceed with API calls.")
     else:
         logger.critical("Script cannot run without valid configuration.")
     logger.info("Script finished.")
