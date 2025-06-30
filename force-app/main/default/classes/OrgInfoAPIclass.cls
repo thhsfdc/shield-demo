@@ -1,5 +1,5 @@
 @RestResource(urlMapping='/OrgInfoAPI/*')
-global with sharing class OrgInfoAPIclass {
+global class OrgInfoAPIclass {
 
     @HttpGet
     global static Map<String, String> doGet() {

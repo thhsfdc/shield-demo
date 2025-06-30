@@ -2,38 +2,29 @@ import requests
 import json
 import os
 import datetime
-import logging # Import the logging module
+import logging
 
 # --- Configuration for Logging ---
-# Get the directory where the script is located
 script_dir = os.path.dirname(os.path.abspath(__file__))
-# Get the script name without extension for the log file prefix
 script_name = os.path.splitext(os.path.basename(__file__))[0]
-
-# Generate a unique log file name: {pythoncode}-YYMMDDhhss.log
 current_time_str = datetime.datetime.now().strftime("%y%m%d%H%M%S")
 LOG_FILE_NAME = f"{script_name}-{current_time_str}.log"
 LOG_FILE_PATH = os.path.join(script_dir, LOG_FILE_NAME)
 
 # --- Set up Logging ---
-# Create a logger
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG) # Set the logging level to DEBUG to capture all messages
+logger.setLevel(logging.DEBUG)
 
-# Create file handler which logs even debug messages
 fh = logging.FileHandler(LOG_FILE_PATH)
 fh.setLevel(logging.DEBUG)
 
-# Create console handler with a higher log level (e.g., INFO or DEBUG)
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG) # You can change this to logging.INFO if you want less console spam
+ch.setLevel(logging.DEBUG)
 
-# Create formatter and add it to the handlers
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 fh.setFormatter(formatter)
 ch.setFormatter(formatter)
 
-# Add the handlers to the logger
 logger.addHandler(fh)
 logger.addHandler(ch)
 
@@ -53,8 +44,6 @@ def load_config(file_path):
         logger.info(f"Configuration loaded successfully from {file_path}")
         # Log config details, but mask sensitive information
         debug_config = config.copy()
-        if 'SALESFORCE_PASSWORD' in debug_config:
-            debug_config['SALESFORCE_PASSWORD'] = '********'
         if 'SALESFORCE_CONSUMER_SECRET' in debug_config:
             debug_config['SALESFORCE_CONSUMER_SECRET'] = '********'
         logger.debug(f"Loaded config: {debug_config}")
@@ -69,9 +58,9 @@ def load_config(file_path):
         logger.error(f"An unexpected error occurred while loading config: {e}")
         return None
 
-def get_salesforce_access_token(config):
+def get_salesforce_access_token_client_credentials(config):
     """
-    Authenticates with Salesforce using the Username-Password flow
+    Authenticates with Salesforce using the OAuth 2.0 Client Credentials Flow
     and returns an access token.
     """
     if not config:
@@ -83,22 +72,19 @@ def get_salesforce_access_token(config):
 
     headers = {'Content-Type': 'application/x-www-form-urlencoded'}
     payload = {
-        'grant_type': 'password',
+        'grant_type': 'client_credentials', # Key change for Client Credentials Flow
         'client_id': config['SALESFORCE_CONSUMER_KEY'],
-        'client_secret': config['SALESFORCE_CONSUMER_SECRET'],
-        'username': config['SALESFORCE_USERNAME'],
-        'password': config['SALESFORCE_PASSWORD'] # Password is sent in payload for auth
+        'client_secret': config['SALESFORCE_CONSUMER_SECRET']
     }
     # Create a debug-friendly version of the payload
     debug_payload = payload.copy()
-    if 'password' in debug_payload:
-        debug_payload['password'] = '********' # Mask password in logs
+    if 'client_secret' in debug_payload:
+        debug_payload['client_secret'] = '********' # Mask secret in logs
     logger.debug(f"Authentication Request Headers: {headers}")
     logger.debug(f"Authentication Request Payload (masked): {debug_payload}")
 
-
     try:
-        logger.info("Attempting to get Salesforce access token...")
+        logger.info("Attempting to get Salesforce access token using Client Credentials flow...")
         response = requests.post(token_url, headers=headers, data=payload)
 
         # Log full response details
@@ -109,14 +95,21 @@ def get_salesforce_access_token(config):
         response.raise_for_status() # Raise an exception for HTTP errors (4xx or 5xx)
         token_data = response.json()
         logger.info("Access token obtained successfully.")
-        logger.debug(f"Received Token Data: {token_data}") # Log raw token data
-        return token_data['access_token'], token_data['instance_url']
+        logger.debug(f"Received Token Data: {token_data}")
+        
+        # The 'instance_url' in client credentials flow might be a bit different,
+        # often it's the login_url or the base URL. For OrgInfoAPI, we prefer My Domain.
+        # So we'll use the configured SALESFORCE_INSTANCE_URL from config.json.
+        instance_url_from_response = token_data.get('instance_url', config['SALESFORCE_INSTANCE_URL'])
+        
+        return token_data['access_token'], instance_url_from_response
     except requests.exceptions.RequestException as e:
-        logger.error(f"Error getting Salesforce access token: {e}")
+        logger.error(f"Error getting Salesforce access token via Client Credentials: {e}")
         if response is not None:
             logger.error(f"Authentication Response Error (from server): {response.text}")
         return None, None
 
+# The call_org_info_api function remains exactly the same as it just needs the token and instance URL.
 def call_org_info_api(access_token, instance_url):
     """
     Calls the Salesforce OrgInfoAPI endpoint using the obtained access token.
@@ -158,8 +151,8 @@ if __name__ == "__main__":
     salesforce_config = load_config(config_file_path)
 
     if salesforce_config:
-        # Get access token
-        access_token, instance_url = get_salesforce_access_token(salesforce_config)
+        # Get access token using Client Credentials flow
+        access_token, instance_url = get_salesforce_access_token_client_credentials(salesforce_config)
         logger.debug(f"Access Token (first 10 chars): {access_token[:10]}...")
         logger.debug(f"Instance URL: {instance_url}")
 
