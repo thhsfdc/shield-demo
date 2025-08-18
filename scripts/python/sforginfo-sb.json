@@ -1,8 +1,8 @@
 {
     "SALESFORCE_CONSUMER_KEY": "3MVG9fJfMmi0N394NVshUOEd4JcwVsmu2egvS5B_.xcw8GIWuYhvW6qFHtwdQoGtcyCg14AuYBZVWIcllntAK",
     "SALESFORCE_CONSUMER_SECRET": "3996FB3CDA364675BA0ED0FC85FED81A6BCF2EFE50228C17E0B3B5D531E44E02",
-    "SALESFORCE_USERNAME": "thoeger-cdosec@salesforce.com",
+    "SALESFORCE_USERNAME": "thoeger-cdosec@salesforce.com.dev",
     "SALESFORCE_PASSWORD": "Emerge-nobu#25",
-    "SALESFORCE_LOGIN_URL": "https://storm-480268b59e3655.my.salesforce.com",
-    "SALESFORCE_INSTANCE_URL": "https://storm-480268b59e3655.my.salesforce.com"
+    "SALESFORCE_LOGIN_URL": "https://storm-480268b59e3655--dev.sandbox.my.salesforce.com",
+    "SALESFORCE_INSTANCE_URL": "https://storm-480268b59e3655--dev.sandbox.my.salesforce.com"
 }
