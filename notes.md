@@ -105,3 +105,9 @@ thoeger@thoeger-ltm8gf7:~/Documents/mulesoft/customer_topics/coop-uk/devops/vsco
   No files were ignored. Update your .forceignore file if you want to ignore certain files.
 
 sf project retrieve preview --target-org shield-devprosb
+
+
+sf project generate manifest --from-org shield-devsb --output-dir manifest --name "FullOrgManifest"
+==> generate really the full manifest of all deployable artefacts?
+
+FullOrgManifest.xml
