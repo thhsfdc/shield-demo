@@ -29,7 +29,7 @@ logger.addHandler(fh)
 logger.addHandler(ch)
 
 # --- Salesforce API Configuration ---
-CONFIG_FILE_NAME = 'sforginfo.json'
+CONFIG_FILE_NAME = 'sforginfo-sb.json'
 config_file_path = os.path.join(script_dir, CONFIG_FILE_NAME)
 API_ENDPOINT_PATH = '/services/apexrest/OrgInfoAPI'
 USERINFO_ENDPOINT_PATH = '/services/oauth2/userinfo' # New: UserInfo endpoint
