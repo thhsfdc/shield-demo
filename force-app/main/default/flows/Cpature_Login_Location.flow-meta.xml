@@ -35,7 +35,7 @@
         <inputParameters>
             <name>UserId</name>
             <value>
-                <elementReference>$Record.Username</elementReference>
+                <elementReference>$Record.UserId</elementReference>
             </value>
         </inputParameters>
         <nameSegment>StoreLoginLocation</nameSegment>
@@ -48,7 +48,7 @@
     <environments>Default</environments>
     <interviewLabel>AI Generated Flow for Create a Platform Event-Triggered Flow
     1....</interviewLabel>
-    <label>Cpature Login Location</label>
+    <label>Capture Login Location</label>
     <processMetadataValues>
         <name>BuilderType</name>
         <value>
@@ -90,5 +90,5 @@
         <object>LoginEventStream</object>
         <triggerType>PlatformEvent</triggerType>
     </start>
-    <status>Draft</status>
+    <status>Active</status>
 </Flow>

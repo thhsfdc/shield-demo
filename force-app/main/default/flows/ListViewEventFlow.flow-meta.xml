@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <processMetadataValues>
+        <name>ObjectType</name>
+        <value>
+            <stringValue>ListViewEvent</stringValue>
+        </value>
+    </processMetadataValues>
+    <actionCalls>
+        <name>Invoke_ListViewEventHandler</name>
+        <actionName>ListViewEventHandler.handleListViewEvent</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>End</targetReference>
+        </connector>
+        <inputParameters>
+            <name>events</name>
+            <value>
+                <elementReference>ListViewEvent</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <decisions>
+        <name>Start</name>
+        <defaultConnector>
+            <targetReference>Invoke_ListViewEventHandler</targetReference>
+        </defaultConnector>
+    </decisions>
+    <startElementReference>Start</startElementReference>
+    <status>Active</status>
+    <triggerType>RecordAfterInsert</triggerType>
+</Flow>
