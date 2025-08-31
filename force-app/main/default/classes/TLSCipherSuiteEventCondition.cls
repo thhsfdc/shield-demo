@@ -23,8 +23,4 @@ global class TLSCipherSuiteEventCondition implements TxnSecurity.EventCondition 
 
         return !allowedSuites.contains(loginEvent.CipherSuite);
     }
-}public with sharing class TLSCipherSuiteEventCondition {
-    public TLSCipherSuiteEventCondition() {
-
-    }
 }
