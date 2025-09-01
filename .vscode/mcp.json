@@ -1,9 +1,9 @@
-{
-  "servers": {
-    "Salesforce DX": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@salesforce/mcp", "--orgs", "DEFAULT_TARGET_ORG", "--toolsets", "all"]
-    }
-  }
-}
+     "mcp": {
+       "servers": {
+         "Salesforce DX": {
+           "type": "stdio",
+           "command": "npx",
+           "args": ["-y", "@salesforce/mcp", "--orgs", "DEFAULT_TARGET_ORG", "--toolsets", "data,orgs,metadata"]
+         }
+       }
+     }
